@@ -52,7 +52,19 @@ class UserController extends Controller
                 ]
             );
             $validatedData['password'] = Hash::make($request->password);
-            $user = User::create($validatedData);
+            // return $validatedData['name'];
+            $user = User::create([
+                'name'=>$validatedData['name'],
+                'email'=>$validatedData['email'],
+                'password'=>$validatedData['password'],
+            ]);
+            $user->profile()->create([
+                'bio'=>$request['bio'],
+                'gender'=>$request['gender'],
+
+            ]);
+
+
             if ($user) {
                 return response()->json([
                     'success' => true,

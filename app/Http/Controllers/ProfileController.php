@@ -51,8 +51,13 @@ class ProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
+        $data=Profile::with('user')->get();
+        return response()->json([
+            "success"=>true,
+            "data"=>$data
+        ]);
     }
 
     /**
