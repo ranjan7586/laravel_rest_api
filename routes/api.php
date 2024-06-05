@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -22,9 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/v1/register',[UserController::class,'store']);
 Route::post('/v1/login',[AuthController::class,'login']);
+
+
 Route::group(['middleware' => 'check.token','prefix'=>'v1'],function($router){
     Route::get('/users',[UserController::class,'show']);
     Route::get('/profiles',[ProfileController::class,'show']);
+    Route::get('/authors',[AuthorController::class,'show']);
     Route::post('/create-profile',[ProfileController::class,'store']);
     Route::patch('/profile-update/{id}',[UserController::class,'update']);
     Route::get('/auth-check',[AuthController::class,'authCheck']);
