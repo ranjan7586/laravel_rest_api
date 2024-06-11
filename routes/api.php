@@ -6,6 +6,7 @@ use App\Http\Controllers\DomainController;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\EmployeRoleController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -54,6 +55,9 @@ Route::group(['middleware' => 'check.token', 'prefix' => 'v1'], function ($route
         Route::delete('/delete-domain/{id}', [DomainController::class, 'destroy']);
 
         Route::patch('/update-role/{id}', [UserController::class, 'roleChange']);
+        Route::post('/create-note',[NoteController::class,'store']);
+        Route::get('/notes',[NoteController::class,'show']);
+        Route::get('/note-image/{id}',[NoteController::class,'noteImage']);
 
     });
 });
