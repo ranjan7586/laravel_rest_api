@@ -28,10 +28,11 @@ class CheckToken
         }
         $user = $tokenRecord->tokenable;
         Auth::login($user);
+        $request['user']=$user;
 
         // return response()->json([
         //     "message" => "check",
-        //     "header" => $user,
+        //     "header" => $request->user,
         //     "ok" => true
         // ], 200);
         return $next($request);

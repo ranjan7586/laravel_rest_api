@@ -14,7 +14,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        
     }
 
     /**
@@ -35,7 +34,8 @@ class UserController extends Controller
                 [
                     'name' => 'required|string|max:255',
                     'email' => 'required|string|email|max:255|unique:users',
-                    'password' => 'required|string|min:8'
+                    'password' => 'required|string|min:8',
+                    'teacher_name' => 'required|string'
                 ],
                 [
                     'name.required' => 'The name field is required.',
@@ -49,20 +49,23 @@ class UserController extends Controller
                     'password.required' => 'The password field is required.',
                     'password.string' => 'The password must be a string.',
                     'password.min' => 'The password must be at least :min characters.',
+                    'teacher_name.required' => 'The favourite teacher"s name field is required.',
+                    'teacher_name.string' => 'The favourite teacher"s name must be a string.',
                 ]
             );
             $validatedData['password'] = Hash::make($request->password);
             // return $validatedData['name'];
             $user = User::create([
-                'name'=>$validatedData['name'],
-                'email'=>$validatedData['email'],
-                'password'=>$validatedData['password'],
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => $validatedData['password'],
+                'teacher_name' => $validatedData['teacher_name'],
             ]);
-            $user->profile()->create([
-                'bio'=>$request['bio'],
-                'gender'=>$request['gender'],
+            // $user->profile()->create([
+            //     'bio'=>$request['bio'],
+            //     'gender'=>$request['gender'],
 
-            ]);
+            // ]);
 
 
             if ($user) {
@@ -85,9 +88,13 @@ class UserController extends Controller
         // $users_list = User::with('profile')->get();
 
 
-        $users_list = User::withWhereHas('profile',function($query){
-            $query->where('gender','Female');
-        })->get();
+        // $users_list = User::withWhereHas('profile',function($query){
+        //     $query->where('gender','Female');
+        // })->get();
+
+        $users_list = User::all();
+
+
         return response()->json([
             'success' => true,
             'data' => $users_list,
@@ -116,7 +123,7 @@ class UserController extends Controller
             $validatedData = $request->validate(
                 [
                     'name' => 'sometimes|string|max:255',
-                    'email' => 'sometimes|string|email|max:255|unique:users,email,'.$id,
+                    'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
                     'password' => 'sometimes|string|min:8'
                 ],
                 [
@@ -135,8 +142,7 @@ class UserController extends Controller
             );
             if ($request->has('password')) {
                 $validatedData['password'] = Hash::make($request->password);
-            }
-            else {
+            } else {
                 unset($validatedData['password']);
             }
             $user->update($validatedData);
@@ -157,5 +163,24 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function adminCheck(Request $request)
+    {
+        return response()->json([
+            "ok" => true
+        ], 200);
+    }
+    public function roleChange(Request $request, int $userID)
+    {
+        $user = User::find($userID);
+        if ($user) {
+            $user->role = $request->role;
+            $user->save();
+
+            return response()->json(['success'=>true,'message' => 'Role updated successfully'],200);
+        } else {
+            return response()->json(['success'=>false,'error' => 'User not found'], 404);
+        }
     }
 }
