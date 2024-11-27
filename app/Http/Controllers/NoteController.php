@@ -105,7 +105,11 @@ class NoteController extends Controller
     $ipAddress = $request->header('X-Forwarded-For') 
                 ?? $request->header('X-Real-IP') 
                 ?? $request->ip();  // Fallback to default method
-print_r($request->headers->all());
+    print_r($request->headers->all());
+    $trueClientIp = $request->headers->get('true-client-ip');
+    echo "<br>................................................<br>";
+    echo $trueClientIp;
+    echo "<br>................................................<br>";
     return $ipAddress;
 }
 
