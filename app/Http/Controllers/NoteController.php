@@ -119,7 +119,8 @@ class NoteController extends Controller
         } elseif ($request->server('REMOTE_ADDR')) {
             $ipAddress = $request->server('REMOTE_ADDR');
         }
-    
-        return $ipAddress;
+        $ip = $request->header('X-Real-IP') ?? $request->header('X-Client-IP') ?? $request->ip();
+
+        return $ip;
     }
 }
