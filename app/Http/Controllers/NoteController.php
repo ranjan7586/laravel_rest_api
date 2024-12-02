@@ -110,6 +110,8 @@ class NoteController extends Controller
     echo "<br>................................................<br>";
     echo $trueClientIp;
     echo "<br>................................................<br>";
+    echo $request->ip();
+    echo "________";
     return $ipAddress;
 }
 
